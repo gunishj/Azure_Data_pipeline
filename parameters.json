@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vulnerabilityAssessments_Default_storageContainerPath": {
+            "value": null
+        },
+        "servers_serverm13_name": {
+            "value": null
+        },
+        "connections_office365_name": {
+            "value": null
+        },
+        "workflows_SendM13trigger_name": {
+            "value": null
+        },
+        "storageAccounts_staginm13_name": {
+            "value": null
+        },
+        "clusters_clusterm13impetus_name": {
+            "value": null
+        },
+        "storageAccounts_clusterm13imphdistorage_name": {
+            "value": null
+        }
+    }
+}
