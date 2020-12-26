@@ -1,4 +1,3 @@
-# Azure_Data_pipeline
 Data pipeline with azure Data Factory, Logic App and Hdinsight for sample covid cases schema
 
 # Mastering the art of creating Automated pipelines using Azure
@@ -10,6 +9,7 @@ Today we will make a delicious yummy full-fledged ETL pipeline, which works exac
 To make our ETL pipeline the first 2 things that we need is an azure account and one resource group which we can create for free if we have a credit card else you can make use of your company’s account as well.
 
 The architecture diagram for my sample pipeline is given below:
+![Alt text](architecture.png?raw=true "Title")
 
 
 The technology stack which we will be covering in our pipeline are as follows:
@@ -24,7 +24,8 @@ The technology stack which we will be covering in our pipeline are as follows:
 
 =>Logic App to send the Notification and stats to business Users
 
-Creating a Storage Account: We need to create a storage account in case we want to access the variety of file system variants provided by azure to us. So we will create the azure account with the minimum specification as we are creating for noncritical application so using locally redundant storage here and will select the tier as hot as we are going to make use of it for further application.
+## Creating a Storage Account:
+We need to create a storage account in case we want to access the variety of file system variants provided by azure to us. So we will create the azure account with the minimum specification as we are creating for noncritical application so using locally redundant storage here and will select the tier as hot as we are going to make use of it for further application.
 
 Once storage account is created we need to choose the kind of file system we want to make use of for now I am choosing blob storage which support all the variety of files. Here we will be creating a container for our input_use_cases.
 
@@ -46,9 +47,12 @@ az storage blob upload-batch --pattern "*-02-20*.csv" --source /mnt/c/Users/Admi
 ```
 On successful run of the command we can verify the batch of data has already been uploaded successfully into our blob data container.
 
-Creating an Azure Data Factory pipeline: ADF is platform as service solution to publish and monitor our data pipeline and it offers a great suite of services to pick for different platforms and environment, if there are some of BI guys here you can relate it to SSIS.
+## Creating an Azure Data Factory pipeline:
+ADF is platform as service solution to publish and monitor our data pipeline and it offers a great suite of services to pick for different platforms and environment, if there are some of BI guys here you can relate it to SSIS.
 
 Our ADF pipeline will look as following:
+
+![Alt text](adf_pipeline_snapshot.png?raw=true "Title")
 
 So for building this ADF pipeline we have used the following services:
 
@@ -191,7 +195,8 @@ Code snippet:
 ```
 And we will create a similar web task for failure notification as well with the same steps as above.
 
-Creating a SQL database: This service is used to create a SQL server database to provide a SQL storage for OLTP operations. We will be creating a database account a new SQL server and set the admin login credentials for DB operations. Try to configure the database for minimum operations as per individual requirement.
+## Creating a SQL database: 
+This service is used to create a SQL server database to provide a SQL storage for OLTP operations. We will be creating a database account a new SQL server and set the admin login credentials for DB operations. Try to configure the database for minimum operations as per individual requirement.
 
 Once the service is started while trying to logging it will ask to set up firewall, click on that link and select add client IP and click on save then retry to login you will be able to successfully login this time. Now we will open our query editor to create DB table to store our input data.
 ```sql
@@ -201,7 +206,8 @@ DROP TABLE IF EXISTS COVID_CASES;
 
 CREATE TABLE COVID_CASES (Sno INT, DateCol varchar(20), TimeCol varchar(20), State varchar(50), ConfirmedIndianNational varchar(20), ConfirmedForeignNational varchar(20), Cured varchar(20), Deaths varchar(20), Confirmed varchar(20) );
 ```
-Creating a HDInsight Cluster: This service is used to Create different variants of big data clusters we have created a Hadoop big data cluster for our OLAP database using this service. We will select the minimum viable option of one worker node for our pipeline you can increase the number of nodes as per your requirement. In this service for creating a cluster We allocate a bunch of processing nodes and storage account for storing our input HDFS files if you already have created a storage account you can point to that else we can create a new data lake storage account while creating the HDInsight cluster.
+## Creating a HDInsight Cluster: 
+This service is used to Create different variants of big data clusters we have created a Hadoop big data cluster for our OLAP database using this service. We will select the minimum viable option of one worker node for our pipeline you can increase the number of nodes as per your requirement. In this service for creating a cluster We allocate a bunch of processing nodes and storage account for storing our input HDFS files if you already have created a storage account you can point to that else we can create a new data lake storage account while creating the HDInsight cluster.
 
 Once the cluster is created we can open the ambari view and in top right we can select hiveserver2 to run query editor for hive, here we will create the table to sqoop our data from SQL server.
 ```sql
@@ -251,7 +257,8 @@ az hdinsight create \
 
 --storage-container containerm13
 ```
-Creating a Logic app service: This service is used to send the custom notification to our end users and we will be creating this service to send our email notifications to business users of pipeline completion status.
+## Creating a Logic app service:
+This service is used to send the custom notification to our end users and we will be creating this service to send our email notifications to business users of pipeline completion status.
 
 In this service we will be creating 3 components when an HTTP request is received, initialize variable task and send an email task.
 
@@ -307,7 +314,8 @@ Information<br/>
 ```
 In the send mail task, we will set the mail recipients and configure the sender’s mail id and in the body we will pass the content of expression task we had created the step above. And in subject we will select the title from right dynamic content options available.
 
-Automating the deployment pipeline: we can download the ARM template from azure for all the resources combined by exporting the ARM template of the resource group if we have used the same resource group to create all the components.
+## Automating the deployment pipeline:
+we can download the ARM template from azure for all the resources combined by exporting the ARM template of the resource group if we have used the same resource group to create all the components.
 ```bash
 Code Snippet
 
